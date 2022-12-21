@@ -1,3 +1,5 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 const { Client } = require ('pg');
 
 const config = {
@@ -6,7 +8,7 @@ const config = {
   post: 5432
 }
 
-const pdb = new Client(config);
+export const pdb = new Client(config);
 pdb.connect().
   then(res => {
     console.log('listening on port', 5432);
@@ -15,21 +17,15 @@ pdb.connect().
     console.log(err);
   });
 
-// const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-
 // prints the tables that currently exists
-const printTables = () => {
+export const printTables = () => {
   return pdb.query("SELECT relname FROM pg_class WHERE relkind = 'r';").
-  then(res => {
-    console.log(res);
-  }).
-  catch(err => {
-    console.log(err);
-  });
+  then(res => { console.log(res); }).
+  catch(err => { console.log(err); });
 }
 
-const alterTable = async () => {
-  await pdb.query(`ALTER TABLE product ADD COLUMN description varChar(1500)`);
+export const alterTable = async () => {
+  return await pdb.query(`ALTER TABLE product ADD COLUMN description varChar(1500)`);
 }
 
 // createTable();
@@ -37,7 +33,7 @@ const alterTable = async () => {
 /**
  * Shows the schema for the table that is provided along with the data type
  */
-const showSchema = async (tableName) => {
+export const showSchema = async (tableName) => {
   pdb.query(`SELECT table_name, column_name, data_type FROM information_schema.columns WHERE table_name='${tableName}';`).
     then(res => {
       console.log(res);
@@ -47,10 +43,10 @@ const showSchema = async (tableName) => {
     });
 }
 
-showSchema('questions');
+// showSchema('questions');
 
 const questionsSchema = `
-  question_id int,
+  question_id int PRIMARY KEY,
   question_body varChar(1500),
   question_date date,
   asker_name varChar(60),
@@ -61,7 +57,7 @@ const questionsSchema = `
 /**
  * create table in database provided the name & schema
  */
-const createTable = async (name, schema) => {
+export const createTable = async (name, schema) => {
   return pdb.query(`CREATE TABLE ${name} (${schema})`).
     then(res => {
       console.log(res);
@@ -72,3 +68,11 @@ const createTable = async (name, schema) => {
 };
 
 // createTable('questions', questionsSchema);
+
+// exports { printTables, alterTable, showSchema, createTable};
+
+// export {printTables as printTables};
+
+// pdb.query(`INSERT INTO product (product_id, slogan, description, category, default_price, name ) VALUES ( 3, "test", "doublequotes", "teestdesccript", 200, "testname")`).
+//   then(res => console.log('success')).
+//   catch(err => console.log(err));
