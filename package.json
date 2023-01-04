@@ -1,0 +1,25 @@
+{
+  "name": "System-Design-Atelier-Q-And-A",
+  "scripts": {
+    "start": "node server/index.js",
+    "server-dev": "npx nodemon --watch server server/index.js",
+    "start-db-docker": "npm run start:postgres",
+    "stop-db-docker": "npm run stop:postgres"
+  },
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "eslint": "^8.30.0",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "neat-csv": "^7.0.0",
+    "node": "^19.3.0",
+    "node-postgres": "^0.6.2",
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "promisify": "^0.0.3",
+    "sequelize": "^6.28.0"
+  }
+}
